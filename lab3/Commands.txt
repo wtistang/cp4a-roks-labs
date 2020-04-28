@@ -1,0 +1,24 @@
+/home/ibmdemo/cp4a-roks-labs/shared/startWAS.sh
+
+sudo /opt/IBM/WebSphere/AppServer/profiles/AppSrv01/bin/stopServer.sh server1
+
+cd /home/ibmdemo/cp4a-roks-labs/lab3 
+
+docker build . -t default-route-openshift-image-registry/demo/modresorts-twas:latest
+
+docker images |grep twas
+
+docker run --name modsorts-twas -p 9443:9443 -d default-route-openshift-image-registry/demo/modresorts-twas:latest
+
+docker login -u $(oc whoami) -p $(oc whoami -t) <your image registry route>
+
+oc new-project demo
+
+docker tag default-route-openshift-image-registry/ demo/modresorts-twas:latest <your image registry route without https://>/demo/modresorts-twas:latest
+
+docker push <your image registry route without https://>/ demo/modresorts-twas:latest
+
+cd /home/ibmdemo/cp4a-roks-labs/lab3 
+
+oc apply -f deploy -n demo
+

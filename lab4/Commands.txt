@@ -1,0 +1,21 @@
+/home/ibmdemo/cp4a-roks-labs/shared/startWAS.sh
+
+sudo /opt/IBM/WebSphere/AppServer/profiles/AppSrv01/bin/stopServer.sh server1
+
+cd /home/ibmdemo/cp4a-roks-labs/lab4/appmod-resorts/
+
+docker build -t default-route-openshift-image-registry/demo/app-modernization:v1.0.0 .
+
+docker images | grep app-modernization
+
+docker login -u $(oc whoami) -p $(oc whoami -t) <your image registry route>
+
+oc new-project demo
+
+docker tag default-route-openshift-image-registry/demo/app-modernization:v1.0.0 <your image registry route without https://>/demo/app-modernization:v1.0.0
+
+docker push <your image registry route without https://>/demo/app-modernization:v1.0.0
+
+oc apply -f deploy/apps/appmod/v1.0.0/app-mod_cr.yaml -n demo
+
+

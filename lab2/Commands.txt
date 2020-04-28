@@ -1,0 +1,50 @@
+
+/home/ibmdemo/cp4a-roks-labs/shared/startWAS.sh
+
+sudo /opt/IBM/WebSphere/AppServer/profiles/AppSrv01/bin/stopServer.sh server1
+
+/home/ibmdemo/cp4a-roks-labs/shared/wlp/bin/server create server1
+
+cp /home/ibmdemo/Downloads/modresorts10war_migrationBundle/target/*.war /home/ibmdemo/cp4a-roks-labs/shared/wlp/usr/servers/server1/apps
+
+cp /home/ibmdemo/Downloads/modresorts10war_migrationBundle/src/main/liberty/config/server.xml /home/ibmdemo/cp4a-roks-labs/shared/wlp/usr/servers/server1/server.xml
+
+/home/ibmdemo/cp4a-roks-labs/shared/wlp/bin/server start server1
+
+cat /home/ibmdemo/cp4a-roks-labs/shared/wlp/usr/servers/server1/logs/messages.log
+
+/home/ibmdemo/cp4a-roks-labs/shared/wlp/bin/server stop server1
+
+cd /home/ibmdemo/Downloads/modresorts10war_migrationBundle
+
+docker build --no-cache -t default-route-openshift-image-registry/modresorts10war/modresorts10war:latest .
+
+docker run -p 9080:9080 default-route-openshift-image-registry/modresorts10war/modresorts10war:latest
+
+oc new-project modresorts10war
+
+docker login -u $(oc whoami) -p $(oc whoami -t) <your image registry route>
+
+docker tag default-route-openshift-image-registry/modresorts10war/modresorts10war:latest <your image registry route without https://>/modresorts10war/modresorts10war:latest
+
+docker push <your image registry route without https://>/modresorts10war/modresorts10war:latest
+
+cd /home/ibmdemo/Downloads/modresorts10war_migrationBundle/operator
+
+oc apply -f application/application-crd.yaml -n modresorts10war
+
+oc apply -f deploy/service_account.yaml -n modresorts10war
+
+oc apply -f deploy/role.yaml -n modresorts10war
+
+oc apply -f deploy/role_binding.yaml -n modresorts10war
+
+oc apply -f deploy/operator.yaml -n modresorts10war
+
+oc get pods -n modresorts10war
+
+oc apply -f application/application-cr.yaml -n modresorts10war
+
+oc get svc -n modresorts10war
+
+

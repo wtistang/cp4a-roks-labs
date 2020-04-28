@@ -1,0 +1,25 @@
+cd /home/ibmdemo/cp4a-roks-labs/lab6/
+
+oc new-project demo
+oc new-project stocktrader
+
+oc create -f samples/stocktrader -n stocktrader
+
+/home/ibmdemo/cp4a-roks-labs/shared/startDemo.sh
+
+"solution": "stock-trader",
+
+"kappnav.component.namespaces": "demo",
+
+{
+  "group": "legacy",
+  "kind": "WAS-Traditional-App"
+},
+
+"solution": "stock-trader", 
+
+{
+  "group": "legacy",
+  "kind": "Liberty-App"
+}
+

@@ -1,0 +1,22 @@
+cd /home/ibmdemo
+git clone https://github.com/<your GitHub username>/my-repo
+
+cd my-repo
+
+unzip /home/ibmdemo/cp4a-roks-labs/lab9/modresorts_src.zip
+
+cd /home/ibmdemo/my-repo 
+code .
+
+cd /home/ibmdemo/my-repo
+git add .
+git commit -m "added ModResorts source code"
+git push 
+
+cd /home/ibmdemo/cp4a-roks-labs/lab9
+
+code .
+
+oc apply -f modresorts-pipeline-res.yaml -n kabanero
+
+
