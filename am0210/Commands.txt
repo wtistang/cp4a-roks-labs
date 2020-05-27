@@ -1,8 +1,8 @@
-/home/ibmdemo/cp4a-roks-labs/shared/startWAS.sh
+/home/student/cp4a-roks-labs/shared/startWAS.sh
 
-sudo /opt/IBM/WebSphere/AppServer/profiles/AppSrv01/bin/stopServer.sh server1
+/opt/IBM/WebSphere/AppServer/profiles/AppSrv01/bin/stopServer.sh server1
 
-cd /home/ibmdemo/cp4a-roks-labs/lab4/appmod-resorts/
+cd /home/student/cp4a-roks-labs/am2100/appmod-resorts/
 
 docker build -t default-route-openshift-image-registry/demo/app-modernization:v1.0.0 .
 

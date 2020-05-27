@@ -1,21 +1,21 @@
 
-/home/ibmdemo/cp4a-roks-labs/shared/startWAS.sh
+/home/student/cp4a-roks-labs/shared/startWAS.sh
 
-sudo /opt/IBM/WebSphere/AppServer/profiles/AppSrv01/bin/stopServer.sh server1
+/opt/IBM/WebSphere/AppServer/profiles/AppSrv01/bin/stopServer.sh server1
 
-/home/ibmdemo/cp4a-roks-labs/shared/wlp/bin/server create server1
+/home/student/cp4a-roks-labs/shared/wlp/bin/server create server1
 
-cp /home/ibmdemo/Downloads/modresorts10war_migrationBundle/target/*.war /home/ibmdemo/cp4a-roks-labs/shared/wlp/usr/servers/server1/apps
+cp /home/student/Downloads/modresorts10war_migrationBundle/target/*.war /home/student/cp4a-roks-labs/shared/wlp/usr/servers/server1/apps
 
-cp /home/ibmdemo/Downloads/modresorts10war_migrationBundle/src/main/liberty/config/server.xml /home/ibmdemo/cp4a-roks-labs/shared/wlp/usr/servers/server1/server.xml
+cp /home/student/Downloads/modresorts10war_migrationBundle/src/main/liberty/config/server.xml /home/student/cp4a-roks-labs/shared/wlp/usr/servers/server1/server.xml
 
-/home/ibmdemo/cp4a-roks-labs/shared/wlp/bin/server start server1
+/home/student/cp4a-roks-labs/shared/wlp/bin/server start server1
 
-cat /home/ibmdemo/cp4a-roks-labs/shared/wlp/usr/servers/server1/logs/messages.log
+cat /home/student/cp4a-roks-labs/shared/wlp/usr/servers/server1/logs/messages.log
 
-/home/ibmdemo/cp4a-roks-labs/shared/wlp/bin/server stop server1
+/home/student/cp4a-roks-labs/shared/wlp/bin/server stop server1
 
-cd /home/ibmdemo/Downloads/modresorts10war_migrationBundle
+cd /home/student/Downloads/modresorts10war_migrationBundle
 
 docker build --no-cache -t default-route-openshift-image-registry/modresorts10war/modresorts10war:latest .
 
@@ -29,7 +29,7 @@ docker tag default-route-openshift-image-registry/modresorts10war/modresorts10wa
 
 docker push <your image registry route without https://>/modresorts10war/modresorts10war:latest
 
-cd /home/ibmdemo/Downloads/modresorts10war_migrationBundle/operator
+cd /home/student/Downloads/modresorts10war_migrationBundle/operator
 
 oc apply -f application/application-crd.yaml -n modresorts10war
 

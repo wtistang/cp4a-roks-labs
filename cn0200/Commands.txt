@@ -7,7 +7,7 @@ appsody list kabanero
 
 appsody repo set-default kabanero
 
-mkdir /home/ibmdemo/quote-frontend
+mkdir /home/student/quote-frontend
 cd quote-frontend
 appsody init kabanero/nodejs-express
 
@@ -22,12 +22,12 @@ code .
   },
 
 
-cp -R /home/ibmdemo/cp4a-roks-labs/lab8/exercise-frontend/* .
+cp -R /home/student/cp4a-roks-labs/cn0200/exercise-frontend/* .
 
 appsody run
 
-mkdir /home/ibmdemo/quote-backend
-cd /home/ibmdemo/quote-backend
+mkdir /home/student/quote-backend
+cd /home/student/quote-backend
 appsody init kabanero/java-spring-boot2
 
 
@@ -38,11 +38,11 @@ appsody init kabanero/java-spring-boot2
 </dependency>
 
 
-cp -R /home/ibmdemo/cp4a-roks-labs/lab8/exercise-backend/* .
+cp -R /home/student/cp4a-roks-labs/cn0200/exercise-backend/* .
 
 appsody run
 
-cd /home/ibmdemo/quote-backend
+cd /home/student/quote-backend
 curl -X POST -d @backend-input.json  -H "Content-Type: application/json" http://localhost:8080/quote
 
 
@@ -55,7 +55,7 @@ export IMAGE_REGISTRY_PASSWORD=$(oc whoami -t)
 
 docker login -u $IMAGE_REGISTRY_USERNAME -p $IMAGE_REGISTRY_PASSWORD $IMAGE_REGISTRY_PUSH
 
-cd /home/ibmdemo/quote-backend
+cd /home/student/quote-backend
 appsody deploy --tag kabanero/quote-backend:v1 --push-url $IMAGE_REGISTRY_PUSH --push --pull-url $IMAGE_REGISTRY_PULL --namespace kabanero
 
 
@@ -63,7 +63,7 @@ export  BACKEND_URL=quote-backend-kabanero.<your image registry route URL withou
 curl -X POST -d @backend-input.json  -H "Content-Type: application/json"  http://$BACKEND_URL/quote
 
 
-cd /home/ibmdemo/quote-frontend
+cd /home/student/quote-frontend
 appsody deploy --generate-only
 
 code .
@@ -72,7 +72,7 @@ env:
 - name: BACKEND_URL
   value: http://quote-backend:8080/quote
 
-cd /home/ibmdemo/quote-frontend
+cd /home/student/quote-frontend
 git init
 git add .
 git commit -m "first commit"
@@ -81,22 +81,12 @@ git remote add origin https://github.com/<your Git Repo Name>/quote-frontend.git
 
 git push -u origin master
 
-cd /home/ibmdemo/quote-frontend
-cp /home/ibmdemo/cp4a-roks-labs/lab8/exercise-frontend/pipeline-resources.yaml . 
+cd /home/student/quote-frontend
+cp /home/student/cp4a-roks-labs/cn0200/exercise-frontend/pipeline-resources.yaml . 
 
 code .
 
-cd /home/ibmdemo/quote-frontend
+cd /home/student/quote-frontend
 oc apply -f pipeline-resources.yaml -n kabanero
-
-
-
-
-
-
-
-
-
-
 
 docker login -u $IMAGE_REGISTRY_USERNAME -p $IMAGE_REGISTRY_PASSWORD $IMAGE_REGISTRY_PUSH
