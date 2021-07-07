@@ -1,0 +1,18 @@
+# A simple yaml file to create a route
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: simpleapp
+  namespace: dk0300
+  labels:
+    app: simpleapp
+spec:
+  host: playgrowth-apps-y77a77-8946bbc006b7c6eb0829d088919818bb-0000.us-east.containers.appdomain.cloud
+  path: /Simple
+  to:
+    kind: Service
+    name: simpleapp
+    weight: 100
+  port:
+    targetPort: 9080
+  wildcardPolicy: None

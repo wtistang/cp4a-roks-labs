@@ -1,0 +1,92 @@
+appsody repo add kabanero https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.6.3/kabanero-stack-hub-index.yaml
+
+
+appsody repo list
+
+appsody list kabanero
+
+appsody repo set-default kabanero
+
+mkdir /home/student/quote-frontend
+cd quote-frontend
+appsody init kabanero/nodejs-express
+
+code .
+
+"dependencies": {
+    "body-parser": "^1.19.0",
+    "config": "^3.2.0",
+    "express-validator": "^6.2.0",
+    "pug": "^2.0.0",
+    "request": "^2.88.0"
+  },
+
+
+cp -R /home/student/cp4a-roks-labs/cn0200/exercise-frontend/* .
+
+appsody run
+
+mkdir /home/student/quote-backend
+cd /home/student/quote-backend
+appsody init kabanero/java-spring-boot2
+
+
+<dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>1.18.8</version>
+</dependency>
+
+
+cp -R /home/student/cp4a-roks-labs/cn0200/exercise-backend/* .
+
+appsody run
+
+cd /home/student/quote-backend
+curl -X POST -d @backend-input.json  -H "Content-Type: application/json" http://localhost:8080/quote
+
+
+oc project kabanero
+
+export IMAGE_REGISTRY_PUSH=<your image registry route without https://>
+export IMAGE_REGISTRY_PULL=image-registry.openshift-image-registry.svc:5000
+export IMAGE_REGISTRY_USERNAME=$(oc whoami)
+export IMAGE_REGISTRY_PASSWORD=$(oc whoami -t)
+
+docker login -u $IMAGE_REGISTRY_USERNAME -p $IMAGE_REGISTRY_PASSWORD $IMAGE_REGISTRY_PUSH
+
+cd /home/student/quote-backend
+appsody deploy --tag kabanero/quote-backend:v1 --push-url $IMAGE_REGISTRY_PUSH --push --pull-url $IMAGE_REGISTRY_PULL --namespace kabanero
+
+
+export  BACKEND_URL=quote-backend-kabanero.<your image registry route URL without the https://default-route-openshift-image-registry. string>
+curl -X POST -d @backend-input.json  -H "Content-Type: application/json"  http://$BACKEND_URL/quote
+
+
+cd /home/student/quote-frontend
+appsody deploy --generate-only
+
+code .
+
+env:
+- name: BACKEND_URL
+  value: http://quote-backend:8080/quote
+
+cd /home/student/quote-frontend
+git init
+git add .
+git commit -m "first commit"
+
+git remote add origin https://github.com/<your Git Repo Name>/quote-frontend.git
+
+git push -u origin master
+
+cd /home/student/quote-frontend
+cp /home/student/cp4a-roks-labs/cn0200/exercise-frontend/pipeline-resources.yaml . 
+
+code .
+
+cd /home/student/quote-frontend
+oc apply -f pipeline-resources.yaml -n kabanero
+
+docker login -u $IMAGE_REGISTRY_USERNAME -p $IMAGE_REGISTRY_PASSWORD $IMAGE_REGISTRY_PUSH

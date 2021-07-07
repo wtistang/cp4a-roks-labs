@@ -1,0 +1,50 @@
+cd /home/student/Downloads
+
+curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+
+chmod +x ./kubectl
+
+/home/student/Downloads/kubectl version 
+
+/home/student/Downloads/kubectl get nodes
+
+/home/student/Downloads/kubectl describe node <nodename> 
+
+/home/student/Downloads/kubectl get pods -n default
+
+/home/student/Downloads/kubectl get pods --all-namespaces 
+
+cd /home/student/cp4a-roks-labs/dk0100
+
+docker build . -t simpleapp
+
+cd /home/student/cp4a-roks-labs/dk0300
+
+oc new-project dk0300
+
+export INTERNAL_REG_HOST=`oc get route default-route --template='{{ .spec.host }}' -n openshift-image-registry`
+
+export CLUSTER_URL=`echo $INTERNAL_REG_HOST | sed 's/default-route-openshift-image-registry.//g'`
+
+docker login -u $(oc whoami) -p $(oc whoami -t) $INTERNAL_REG_HOST
+
+docker tag simpleapp:latest $INTERNAL_REG_HOST/`oc project -q`/simpleapp:latest
+
+docker push $INTERNAL_REG_HOST/`oc project -q`/simpleapp:latest
+
+ls -l
+
+cat kube01.yaml 
+
+/home/student/Downloads/kubectl apply -f kube01.yaml
+
+/home/student/Downloads/kubectl get pod
+
+cat kube02.yaml 
+
+/home/student/Downloads/kubectl apply -f kube02.yaml
+
+cat kube03.yaml 
+
+/home/student/Downloads/kubectl apply -f kube03.yaml
+  

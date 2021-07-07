@@ -1,0 +1,36 @@
+
+/home/student/cp4a-roks-labs/shared/startWAS.sh
+
+/home/student/IBM/WebSphere/AppServer/profiles/AppSrv01/bin/stopServer.sh server1
+
+/home/student/cp4a-roks-labs/shared/wlp/bin/server create server1
+
+cp /home/student/Downloads/modresorts10war_migrationBundle/target/*.war /home/student/cp4a-roks-labs/shared/wlp/usr/servers/server1/apps/
+
+cp /home/student/Downloads/modresorts10war_migrationBundle/src/main/liberty/config/server.xml /home/student/cp4a-roks-labs/shared/wlp/usr/servers/server1/server.xml
+
+/home/student/cp4a-roks-labs/shared/wlp/bin/server start server1
+
+cat /home/student/cp4a-roks-labs/shared/wlp/usr/servers/server1/logs/messages.log
+
+/home/student/cp4a-roks-labs/shared/wlp/bin/server stop server1
+
+cd /home/student/Downloads/modresorts10war_migrationBundle
+
+docker build --no-cache -t modresorts10war:latest .
+
+docker run -p 9080:9080 modresorts10war:latest
+
+oc new-project modresorts10war
+
+export INTERNAL_REG_HOST=`oc get route default-route --template='{{ .spec.host }}' -n openshift-image-registry`
+
+export CLUSTER_URL=`echo $INTERNAL_REG_HOST | sed 's/default-route-openshift-image-registry.//g'`
+  
+
+docker login -u $(oc whoami) -p $(oc whoami -t) $INTERNAL_REG_HOST
+
+docker tag modresorts10war:latest $INTERNAL_REG_HOST/`oc project -q`/modresorts10war:latest
+
+docker push $INTERNAL_REG_HOST/`oc project -q`/modresorts10war:latest
+

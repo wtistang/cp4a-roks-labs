@@ -1,0 +1,30 @@
+cd /home/student/cp4a-roks-labs/dk0100
+
+cat Dockerfile 
+
+cat server.xml 
+
+docker build . -t simpleapp 
+
+docker images 
+
+docker images |grep simpleapp
+
+docker images | grep websphere-liberty 
+
+docker pull ibmcom/websphere-liberty:19.0.0.9-kernel-ubi-min
+
+docker images | grep websphere-liberty 
+
+docker run --name=simpleC1 --hostname=localhost -d -p 8081:9080 simpleapp
+
+docker ps
+
+docker run -–name=simpleC2 -–hostname=localhost -d -p 8082:9080 simpleapp 
+
+docker ps | grep simple 
+
+docker stop simpleC1 simpleC2
+
+docker rm simpleC1 simpleC2  
+

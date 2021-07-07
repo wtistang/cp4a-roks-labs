@@ -1,0 +1,26 @@
+/home/student/cp4a-roks-labs/shared/startWAS.sh
+
+/home/student/IBM/WebSphere/AppServer/profiles/AppSrv01/bin/stopServer.sh server1
+
+cd /home/student/cp4a-roks-labs/am0300
+
+docker build . -t modresorts-twas:latest
+
+docker images |grep twas
+
+docker run --name modsorts-twas -p 9443:9443 -d modresorts-twas:latest
+
+oc new-project demo
+
+export INTERNAL_REG_HOST=`oc get route default-route --template='{{ .spec.host }}' -n openshift-image-registry`
+
+export CLUSTER_URL=`echo $INTERNAL_REG_HOST | sed 's/default-route-openshift-image-registry.//g'`
+
+docker tag modresorts-twas:latest $INTERNAL_REG_HOST/`oc project -q`/modresorts-twas:latest
+
+docker push $INTERNAL_REG_HOST/`oc project -q`/modresorts-twas:latest
+
+cd /home/student/cp4a-roks-labs/am0300
+
+oc apply -f deploy -n demo
+

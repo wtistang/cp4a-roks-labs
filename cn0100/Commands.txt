@@ -1,0 +1,137 @@
+cd /home/student
+mkdir appsody-apps 
+cd appsody-apps
+
+appsody repo add lab-repo https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.6.3/kabanero-stack-hub-index.yaml
+
+appsody repo list
+
+appsody list lab-repo
+
+appsody repo set-default lab-repo
+
+appsody stack create my-nodejs-express --copy lab-repo/nodejs-express
+cd my-nodejs-express
+ls -al
+
+cd /home/student/appsody-apps/my-nodejs-express
+appsody stack package
+
+appsody repo list
+
+appsody list dev.local
+
+mkdir /home/student/appsody-apps/test-my-stack
+
+cd /home/student/appsody-apps/test-my-stack
+
+appsody init dev.local/my-nodejs-express
+
+appsody run
+
+curl -v localhost:3000
+
+cd /home/student/appsody-apps/my-nodejs-express
+
+code .
+
+const helmet = require('helmet');
+app.use(helmet());
+
+"helmet": "^3.21.1",
+
+cd /home/student/appsody-apps/my-nodejs-express
+
+appsody stack package
+
+cd /home/student/appsody-apps
+
+rm -rf test-my-stack
+
+mkdir test-my-stack
+
+cd test-my-stack
+
+appsody init dev.local/my-nodejs-express
+
+appsody run
+
+curl -v localhost:3000
+
+cd /home/student/appsody-apps/my-nodejs-express
+appsody stack package --image-namespace lab-repo --image-registry <your image registry route without https://>
+
+docker images | grep default-route
+
+ls -al /home/student/.appsody/stacks/dev.local
+
+oc new-project lab-repo
+oc policy add-role-to-group registry-viewer system:unauthenticated -n lab-repo
+
+docker login -u $(oc whoami) -p $(oc whoami -t) <your image registry route>
+
+docker push <your image registry route without https://>/lab-repo/my-nodejs-express:0
+docker push <your image registry route without https://>/lab-repo/my-nodejs-express:0.2
+docker push <your image registry route without https://>/lab-repo/my-nodejs-express:0.2.10
+docker push <your image registry route without https://>/lab-repo/my-nodejs-express:latest
+
+cd /home/student/appsody-apps/my-nodejs-express
+
+git init
+
+git add .
+
+git commit -m "first commit"
+
+git remote add origin https://github.com/<username>/icpa-labrepo.git
+
+git push -u origin master
+
+cd /home/student/appsody-apps/my-nodejs-express
+
+git tag 0.2.10-custom -m "Custom collections, version 0.2.10-custom"
+
+git push --tags
+
+cd /home/student/appsody-apps/my-nodejs-express
+
+appsody stack add-to-repo icpa-labrepo --release-url https://github.com/kpostreich/icpa-labrepo/releases/download/0.2.10-custom/ 
+
+cp /home/student/.appsody/stacks/dev.local/icpa-labrepo-index.* /home/student/Documents
+
+cp /home/student/.appsody/stacks/dev.local/my-nodejs-express*.gz /home/student/Documents
+
+ls -l /home/student/Documents
+
+https://github.com/<username>/icpa-labrepo/releases/download/0.2.10-custom/icpa-labrepo-index.yaml
+
+oc get stacks -n kabanero
+
+oc get pipelines -n kabanero | grep my-nodejs
+
+appsody repo add icpa-labrepo-shared https://github.com/<username>/icpa-labrepo/releases/download/0.2.10-custom/icpa-labrepo-index.yaml
+
+appsody repo list
+
+appsody list icpa-labrepo-shared
+
+appsody repo set-default developer-repo
+
+mkdir /home/student/test-app
+
+cd /home/student/test-app
+
+appsody init icpa-labrepo-shared/my-nodejs-express
+
+appsody run
+
+curl -v localhost:3000
+
+
+
+
+
+
+
+
+

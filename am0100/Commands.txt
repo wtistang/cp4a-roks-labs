@@ -1,0 +1,15 @@
+
+/home/student/cp4a-roks-labs/shared/startWAS.sh
+
+cd /home/student/Downloads/
+
+ls -l
+
+tar xvfz transformationadvisor-Linux_Evaluation_Server1.tgz
+
+cd /home/student/Downloads/transformationadvisor-2.1.1
+
+./bin/transformationadvisor -w /home/student/IBM/WebSphere/AppServer -p AppSrv01 wsadmin passw0rd 
+
+
+
